@@ -32,6 +32,12 @@ func TestEnvironmentSource_FillValue(t *testing.T) {
 			env:  map[string]string{"FIELD_STR": "str", "FIELD_INT": "12", "FIELD_FLOAT": "3.14", "FIELD_BOOL": "true", "FIELD_STR_SLICE": "a,b,c"},
 		},
 		{
+			name: "ok/with prefix",
+			opts: []unstruct.EnvironmentSourceOption{unstruct.WithPrefix("X_")},
+			want: data{FieldStr: "str", FieldInt: 12, FieldFloat: 3.14, FieldBool: true, FieldStrSlice: []string{"a", "b", "c"}},
+			env:  map[string]string{"X_FIELD_STR": "str", "X_FIELD_INT": "12", "X_FIELD_FLOAT": "3.14", "X_FIELD_BOOL": "true", "X_FIELD_STR_SLICE": "a,b,c"},
+		},
+		{
 			name: "ok/with custom delimiter",
 			want: data{FieldStr: "str", FieldInt: 12, FieldFloat: 3.14, FieldBool: true, FieldStrSlice: []string{"a", "b", "c"}},
 			opts: []unstruct.EnvironmentSourceOption{unstruct.WithSliceDelimiter(";")},

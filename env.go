@@ -11,6 +11,7 @@ import (
 
 type environmentSourceConfig struct {
 	sliceDelimiter string
+	prefix         string
 }
 
 type EnvironmentSourceOption func(*environmentSourceConfig)
@@ -18,6 +19,13 @@ type EnvironmentSourceOption func(*environmentSourceConfig)
 func WithSliceDelimiter(delimiter string) EnvironmentSourceOption {
 	return func(cfg *environmentSourceConfig) {
 		cfg.sliceDelimiter = delimiter
+	}
+}
+
+// WithPrefix indicates the EnvironmentSource fetches environment variables with given prefix.
+func WithPrefix(prefix string) EnvironmentSourceOption {
+	return func(cfg *environmentSourceConfig) {
+		cfg.prefix = prefix
 	}
 }
 
@@ -44,6 +52,9 @@ func (s *EnvironmentSource) FillValue(path Path, target reflect.Value) error {
 		parts = append(parts, strings.ToUpper(toSnakeCase(sf.Name)))
 	}
 	name := strings.Join(parts, "_")
+	if s.prefix != "" {
+		name = s.prefix + name
+	}
 	val := os.Getenv(name)
 	switch kind := target.Type().Kind(); kind {
 	case reflect.Slice:
