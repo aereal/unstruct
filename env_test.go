@@ -13,7 +13,7 @@ import (
 type data struct {
 	FieldStr      string
 	FieldInt      int
-	FieldFloat    float32
+	FieldFloat    float64
 	FieldBool     bool
 	FieldStrSlice []string
 }
