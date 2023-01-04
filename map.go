@@ -13,6 +13,7 @@ func NewMapSource(m map[string]any) *MapSource {
 	return src
 }
 
+// MapSource is a Source that fills values from given the map.
 type MapSource struct {
 	m map[string]any
 }
