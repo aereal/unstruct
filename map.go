@@ -47,7 +47,7 @@ func (s *MapSource) FillValue(path Path, target reflect.Value) error {
 		}
 	default:
 		if !vt.AssignableTo(target.Type()) {
-			return &UnsupportedTypeError{vt.Kind().String()}
+			return &UnsupportedTypeError{Kind: vt.Kind().String()}
 		}
 		target.Set(reflect.ValueOf(v))
 	}
