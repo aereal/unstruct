@@ -12,13 +12,13 @@ type Source interface {
 	FillValue(path Path, target reflect.Value) error
 }
 
-func NewDecoder(srcs ...Source) *Decoder {
-	return &Decoder{srcs: srcs}
+func NewDecoder(src Source) *Decoder {
+	return &Decoder{src: src}
 }
 
 // Decoder runs data sources against given target value and completes target value.
 type Decoder struct {
-	srcs []Source
+	src Source
 }
 
 // Decode decodes the values that comes from Codec's sources into given target.
@@ -37,12 +37,10 @@ func (d *Decoder) Decode(target any) error {
 
 func (d *Decoder) decode(path Path, structType reflect.Value, typ reflect.Type) error {
 	if _, ok := internal.ExtractTextUnmarshaler(structType); ok {
-		for _, s := range d.srcs {
-			if err := s.FillValue(path, structType); err == nil {
-				return nil
-			}
+		if err := d.src.FillValue(path, structType); err != nil {
+			return err
 		}
-		return ErrValueNotFound
+		return nil
 	}
 
 	numFields := typ.NumField()
@@ -67,10 +65,8 @@ func (d *Decoder) decode(path Path, structType reflect.Value, typ reflect.Type) 
 }
 
 func (d *Decoder) fillValue(path Path, field reflect.StructField, value reflect.Value) error {
-	for _, s := range d.srcs {
-		if err := s.FillValue(path, value); err == nil {
-			return nil
-		}
+	if err := d.src.FillValue(path, value); err == nil {
+		return nil
 	}
 	opts := parseTag(field.Tag)
 	if opts.optional {
