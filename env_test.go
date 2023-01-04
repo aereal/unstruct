@@ -4,6 +4,7 @@ import (
 	"errors"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/aereal/unstruct"
 	"github.com/google/go-cmp/cmp"
@@ -92,5 +93,24 @@ func TestEnvironmentSource_FillValue_nested(t *testing.T) {
 	}
 	if diff := cmp.Diff(want, got); diff != "" {
 		t.Errorf("decoded value (-want, +got):\n%s", diff)
+	}
+}
+
+func TestEnvironmentSource_FillValue_textmarshaler(t *testing.T) {
+	type marshalerData struct {
+		Timestamp time.Time
+	}
+	want := marshalerData{
+		Timestamp: time.Unix(1672760375, 0),
+	}
+	t.Setenv("TIMESTAMP", "2023-01-04T00:39:35+09:00")
+	src := unstruct.NewEnvironmentSource()
+	codec := unstruct.NewDecoder(src)
+	var got marshalerData
+	if err := codec.Decode(&got); err != nil {
+		t.Fatal(err)
+	}
+	if diff := cmp.Diff(want, got); diff != "" {
+		t.Errorf("-want, +got:\n%s", diff)
 	}
 }

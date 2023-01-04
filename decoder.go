@@ -3,6 +3,8 @@ package unstruct
 import (
 	"reflect"
 	"strings"
+
+	"github.com/aereal/unstruct/internal"
 )
 
 // Source is an interface that fetches the values from external sources and fills into given target.
@@ -34,6 +36,15 @@ func (d *Decoder) Decode(target any) error {
 }
 
 func (d *Decoder) decode(path Path, structType reflect.Value, typ reflect.Type) error {
+	if _, ok := internal.ExtractTextUnmarshaler(structType); ok {
+		for _, s := range d.srcs {
+			if err := s.FillValue(path, structType); err == nil {
+				return nil
+			}
+		}
+		return ErrValueNotFound
+	}
+
 	numFields := typ.NumField()
 	for i := 0; i < numFields; i++ {
 		field := typ.Field(i)

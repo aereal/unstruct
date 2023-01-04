@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding"
 	"errors"
 	"fmt"
 	"reflect"
@@ -10,9 +11,45 @@ import (
 var (
 	ErrOverflowSize     = errors.New("overflow size")
 	ErrInvalidBoolValue = errors.New("invalid bool value")
+
+	textUnmarshaler = reflect.TypeOf((*encoding.TextUnmarshaler)(nil)).Elem()
 )
 
+func extract(v reflect.Value) (encoding.TextUnmarshaler, bool) {
+	if v.Type().Implements(textUnmarshaler) {
+		v2 := v
+		if v2.IsNil() {
+			v2.Set(reflect.New(v2.Type().Elem()))
+		}
+		if tu, ok := v2.Interface().(encoding.TextUnmarshaler); ok {
+			return tu, ok
+		}
+	}
+	return nil, false
+}
+
+func ExtractTextUnmarshaler(v reflect.Value) (encoding.TextUnmarshaler, bool) {
+	if tu, ok := extract(v); ok {
+		return tu, ok
+	}
+	if v.CanAddr() {
+		if tu, ok := extract(v.Addr()); ok {
+			return tu, ok
+		}
+	}
+	ptr := reflect.New(v.Type())
+	ptr.Elem().Set(v)
+	if tu, ok := extract(ptr); ok {
+		return tu, ok
+	}
+	return nil, false
+}
+
 func DecodeStringToScalarType(v string, value reflect.Value) error {
+	if tu, ok := ExtractTextUnmarshaler(value); ok {
+		return tu.UnmarshalText([]byte(v))
+	}
+
 	switch kind := value.Kind(); kind {
 	case reflect.String:
 		value.SetString(v)
