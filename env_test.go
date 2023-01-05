@@ -55,8 +55,7 @@ func TestEnvironmentSource_FillValue(t *testing.T) {
 			for k, v := range tc.env {
 				t.Setenv(k, v)
 			}
-			src := unstruct.NewEnvironmentSource(tc.opts...)
-			codec := unstruct.NewDecoder(src)
+			codec := unstruct.NewDecoder(unstruct.NewEnvironmentSource(tc.opts...))
 			var got data
 			err := codec.Decode(&got)
 			if (err != nil) != (tc.wantErr != nil) {
@@ -104,8 +103,7 @@ func TestEnvironmentSource_FillValue_textmarshaler(t *testing.T) {
 		Timestamp: time.Unix(1672760375, 0),
 	}
 	t.Setenv("TIMESTAMP", "2023-01-04T00:39:35+09:00")
-	src := unstruct.NewEnvironmentSource()
-	codec := unstruct.NewDecoder(src)
+	codec := unstruct.NewDecoder(unstruct.NewEnvironmentSource())
 	var got marshalerData
 	if err := codec.Decode(&got); err != nil {
 		t.Fatal(err)
