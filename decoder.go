@@ -56,6 +56,7 @@ func (d *Decoder) decode(path Path, structType reflect.Value, typ reflect.Type) 
 				return &DecodeFieldError{Field: field, Err: err}
 			}
 		default:
+			err := d.src.FillValue(path, fieldValue)
 			if err := d.fillValue(currPath, field, fieldValue); err != nil {
 				return &DecodeFieldError{Field: field, Err: err}
 			}
