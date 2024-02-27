@@ -1,5 +1,5 @@
-github.com/aereal/unstruct v0.2.0 h1:M29DZyciD/hkEfgU0DF9chsqKW3GpT9v4mNyBA7F+2U=
-github.com/aereal/unstruct v0.2.0/go.mod h1:xMggjX24Cbu8VBZotmUawQRTBcDFxmr1bXf/R2asPfI=
+github.com/aereal/unstruct v0.3.0 h1:E9d/Ds0OLHkm6QF0DRd3+tSTy5HC6ptUlXHIcSNhrYQ=
+github.com/aereal/unstruct v0.3.0/go.mod h1:xMggjX24Cbu8VBZotmUawQRTBcDFxmr1bXf/R2asPfI=
 github.com/aws/aws-sdk-go-v2 v1.25.2 h1:/uiG1avJRgLGiQM9X3qJM8+Qa6KRGK5rRPuXE0HUM+w=
 github.com/aws/aws-sdk-go-v2 v1.25.2/go.mod h1:Evoc5AsmtveRt1komDwIsjHFyrP5tDuF1D1U+6z6pNo=
 github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.2 h1:bNo4LagzUKbjdxE0tIcR9pMzLR2U/Tgie1Hq1HQ3iH8=
