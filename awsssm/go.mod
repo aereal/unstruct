@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/aereal/unstruct v0.2.0
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.49.1
-	github.com/google/go-cmp v0.5.9
+	github.com/google/go-cmp v0.6.0
 )
 
 require (
